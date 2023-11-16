@@ -1,1 +1,10 @@
-
+def trash (file): 
+    for c in text:
+        if 65 <= ord(c) <= 90:
+            c = chr(ord(c)+32)
+    for c in text:
+        if not (97 <= c <= 122):
+            c = " "
+for i in range (8):
+    file = open(files,"")
+    trash(file)
