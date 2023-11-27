@@ -30,3 +30,8 @@ print(new_list_speech)
 presidents = {new_list_speech[0]:"Jacques", new_list_speech[1]:"Jacques", new_list_speech[2]:"Valéry", new_list_speech[3]:"François",new_list_speech[4]:"Emmanuel" , new_list_speech[5]:"François", new_list_speech[6]: "François", new_list_speech[7]:"Nicolas"}
 
 print(presidents)
+
+for speech in new_list_speech:
+    for letter in speech:
+        if 0<ord(letter)<65 or 90<ord(letter)<97 or 122<ord(letter)=<127 :
+            speech = speech[:-1]
