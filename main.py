@@ -31,12 +31,3 @@ presidents = {new_list_speech[0]:"Jacques", new_list_speech[1]:"Jacques", new_li
 
 print(presidents)
 
-for speech in new_list_speech:
-    for char in speech:
-        if 47 < ord(char) < 58 :
-            speech = speech[:-1]
-    if speech not in noms:
-        noms.append(speech)
-
-print(noms)
-
