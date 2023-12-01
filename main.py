@@ -25,11 +25,8 @@ for speech in list_speech:
 
 #Pour la seconde consigne, j'initialise en brut un dictionnaire. J'associe pour chaque textes de la nouvelle liste, le prénom du président qui va avec. Au début j'ai voulu mettre comme clé les prénoms, mais je me retrouvais à avoir deux fois la même clé (notamment pour "Jacques" qui devait être associé à deux textes). Donc j'ai décidé de faire des noms de ma nouvelles listes, les clés auxquelles j'associe les prénoms des présidents, un jolie moyen de gruger le systême. J'ai pas mal duré pour créer ce dictionnaire mais finalement il est bien fonctionnel. Il affiche le nom des textes simplifié et le prénom des présidents associés. Les "print" que j'ai mis partout c'est pour à chaque fois suivre l'évolution de chaque élément au fur et à mesure du code. Si tu veux essayer ce code, tu dois créer ton nouveau projet, aller dans les fichiers de ton ordinateur, puis dans "pycharmproject" et dans ce nouveau projet tu mets les fichiers textes qui sont sur moodle. Ca te les fera directement apparaître sur ton nouveau projet pycharm. Et tu les mets dans un module intitulé "Textes".
 
-print(new_list_speech)
-
 presidents = {new_list_speech[0]:"Jacques", new_list_speech[1]:"Jacques", new_list_speech[2]:"Valéry", new_list_speech[3]:"François",new_list_speech[4]:"Emmanuel" , new_list_speech[5]:"François", new_list_speech[6]: "François", new_list_speech[7]:"Nicolas"}
 
-print(presidents)
 
 noms = []
 
@@ -40,5 +37,19 @@ for speech in new_list_speech:
     if speech not in noms:
         noms.append(speech)
 
-print(noms)
+def cleaned(file):
+    with open(file,"r",encoding="utf-8")as f:
+        speech = []
+        for lines in f:
+            cleaned_content = ""
+            for c in lines:
+                if 65 <= ord(c) <= 90:
+                    c = chr(ord(c) + 32)
+                if not (97 <= ord(c) <= 122 or c == "é" or c == "É"):
+                    c = ""
+                cleaned_content += c
+            speech.append(cleaned_content)
+        return speech
 
+f = cleaned("Textes/Nomination_Chirac1.txt")
+print(f)
