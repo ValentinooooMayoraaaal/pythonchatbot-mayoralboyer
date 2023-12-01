@@ -31,3 +31,78 @@ presidents = {new_list_speech[0]:"Jacques", new_list_speech[1]:"Jacques", new_li
 
 print(presidents)
 
+noms = []
+
+for speech in new_list_speech:
+    for char in speech:
+        if 47 < ord(char) < 58 :
+            speech = speech[:-1]
+    if speech not in noms:
+        noms.append(speech)
+
+print(noms)
+
+
+def convertir_en_minuscules(Chirac1,Chiracnew1):
+    with open("Nomination_Chirac1.txt", 'a', encoding='utf-8') as file_in:
+        contenu = Chirac1.read()
+        contenu_minuscules = contenu.lower()
+    with open("Nomination_Chirac1.txt", 'a', encoding='utf-8') as file_in:
+        contenu = Chiracnew1.write(contenu_minuscules)
+    return contenu
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#def trash (files_names):
+ #   for file in files_names:
+  #      for i in file:
+   #         for j in file:
+    #    if 65 <= file[i][j] <= 90:
+     #       file[i][j] = chr(ord(c)+32)
+    #for c in file:
+     #   if not (97 <= c <= 122):
+      #      c = " "
+
