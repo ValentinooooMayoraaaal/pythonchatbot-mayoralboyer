@@ -87,22 +87,3 @@ def convertir_en_minuscules(Chirac1,Chiracnew1):
 
 
 
-
-
-
-
-
-
-
-
-
-#def trash (files_names):
- #   for file in files_names:
-  #      for i in file:
-   #         for j in file:
-    #    if 65 <= file[i][j] <= 90:
-     #       file[i][j] = chr(ord(c)+32)
-    #for c in file:
-     #   if not (97 <= c <= 122):
-      #      c = " "
-
