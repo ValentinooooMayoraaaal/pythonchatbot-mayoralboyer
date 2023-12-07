@@ -40,34 +40,22 @@ for speech in new_list_speech:
     if speech not in noms:
         noms.append(speech)
 
-print(noms)
+def cleaned(file):
+    with open(file,"r",encoding="utf-8")as f:
+        speech = []
+        for lines in f:
+            cleaned_content = ""
+            for c in lines:
+                if 65 <= ord(c) <= 90:
+                    c = chr(ord(c) + 32)
+                if not (97 <= ord(c) <= 122 or c == "é" or c == "É" or c == "ç" or c == "à" or c == " "):
+                    c = ""
+                cleaned_content += c
+            speech.append(cleaned_content)
+        return speech
 
-
-def convertir_en_minuscules(Chirac1,Chiracnew1):
-    with open("Nomination_Chirac1.txt", 'a', encoding='utf-8') as file_in:
-        contenu = Chirac1.read()
-        contenu_minuscules = contenu.lower()
-    with open("Nomination_Chirac1.txt", 'a', encoding='utf-8') as file_in:
-        contenu = Chiracnew1.write(contenu_minuscules)
-    return contenu
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+f = cleaned("Textes/Nomination_Chirac1.txt")
+print(f)
 
 
 
