@@ -51,5 +51,9 @@ def cleaned(file):
             speech.append(cleaned_content)
         return speech
 
-f = cleaned("Textes/Nomination_Chirac1.txt")
-print(f)
+
+
+
+for i in range(len(list_speech)):
+    with open(f"Speeches/min_list_speech_{i}.txt", "w", encoding="utf-8") as f1, open(f"Textes/{list_speech[i]}", "r", encoding="utf-8") as f2:
+        f1 = cleaned(f"Textes/{list_speech[i]}")
