@@ -45,8 +45,10 @@ def cleaned(file):
             for c in lines:
                 if 65 <= ord(c) <= 90:
                     c = chr(ord(c) + 32)
-                if not (97 <= ord(c) <= 122 or c == "é" or c == "É"):
+                if not (97 <= ord(c) <= 122 or c == "é" or c == "É" or c == "ç" or c == "à" or c == " " or c == "-" or c == "'"):
                     c = ""
+                if c == "-" or c == "'":
+                    c = " "
                 cleaned_content += c
             speech.append(cleaned_content)
         return speech
