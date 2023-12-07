@@ -43,16 +43,6 @@ for speech in new_list_speech:
 print(noms)
 
 
-def convertir_en_minuscules(Chirac1,Chiracnew1):
-    with open("Nomination_Chirac1.txt", 'a', encoding='utf-8') as file_in:
-        contenu = Chirac1.read()
-        contenu_minuscules = contenu.lower()
-    with open("Nomination_Chirac1.txt", 'a', encoding='utf-8') as file_in:
-        contenu = Chiracnew1.write(contenu_minuscules)
-    return contenu
-
-
-
 
 
 
