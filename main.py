@@ -69,20 +69,20 @@ def calcule_tf_idf(file):
     total_documents = 0
     for key in len(presidents.keys()):
         total_documents += 1
-            # Lire le contenu du fichier
-            with open(file, "r", encoding="utf-8") as f1:
-                #ceci fait une liste des mots unique de la file en question
+
+            with open(file, "r", encoding="utf-8") as f:
+                #ceci fait une liste des mots unique du doc en question grace a la fonction set()
                 unique_words = set(file.read().split())
 
                 for word in unique_words:
                     idf_scores[word] += 1
 
                 word_count = defaultdict(int)
-
+                file.seek(0) #on revient au début du fichier pour le lire a nouveau
                 for word in file.read().split():
                     word_count[word] += 1
 
                 for word, count in word_count.items():
-                    tf_idf_scores[word] += (count / len(unique_words)) * math.log(total_documents / idf_scores[word])
+                    tf_idf_scores[word] += (count / len(unique_words)) * math.log(total_documents / idf_scores[word] +1)
 
     return dict(tf_idf_scores)
