@@ -58,37 +58,29 @@ for i in range(len(list_speech)):
     with open(f"Speeches/min_list_speech_{i}.txt", "w", encoding="utf-8") as f1, open(f"Textes/{list_speech[i]}", "r", encoding="utf-8") as f2:
         f1 = cleaned(f"Textes/{list_speech[i]}")
 
-def tf(text):
-    nb_occur = {}
-    mots = text.split()
+def calculate_tf_idf(file):
 
-    for mot in mots:
-        if mot in mots:
-            nb_occur[mot] += 1
-        else:
-            nb_occur[mot] = 1
+    tf_idf_scores = defaultdict(float)
 
-    return nb_occur
+    idf_scores = defaultdict(float)
 
-def idf(directory):
-    # Initialiser un dictionnaire vide pour stocker le score IDF de chaque mot
-    scores_idf = {}
+    total_documents = 0
 
-    #Ici je me suis basé sur la premiere fonction
-    documents_total = 0
-    for filename in os.listdir(directory):
-        if filename.endswith(".txt"):
-            documents_total += 1
+            # Lire le contenu du fichier
+            with open(file, "r", encoding="utf-8") as file:
+                # Extraire les mots uniques du document
+                unique_words = set(file.read().split())
 
-            with (open(os.path.join(directory, filename), "r", encoding="utf-8") as file):
-                mots_unique = set(file.read().split())
-                for mot in mots_unique:
-                    # get super utile dans les dico, je l'ai appris dans la video sur moodle des dictionaires
-                    # la focntion get() sert a chercher une valeur associé a une clef qui peut ne pas exister, ici par defaut la valeur 0 est renvoyé si l'items n'existe pas
-                    scores_idf[mot] = scores_idf.get(word, 0) + 1
+                for word in unique_words:
+                    idf_scores[word] += 1
 
-    # La fameuse formule...
-    for word, count in idf_scores.items():
-        idf_scores[word] = math.log(total_documents / count)
+                # Mettre à jour le dictionnaire des scores TF-IDF
+                word_count = defaultdict(int)
+                for word in file.read().split():
+                    word_count[word] += 1
 
-    return idf_scores
+                for word, count in word_count.items():
+                    tf_idf_scores[word] += (count / len(unique_words)) * math.log(total_documents / idf_scores[word])
+
+    return dict(tf_idf_scores)
+
