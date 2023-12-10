@@ -25,11 +25,8 @@ for speech in list_speech:
 
 #Pour la seconde consigne, j'initialise en brut un dictionnaire. J'associe pour chaque textes de la nouvelle liste, le prénom du président qui va avec. Au début j'ai voulu mettre comme clé les prénoms, mais je me retrouvais à avoir deux fois la même clé (notamment pour "Jacques" qui devait être associé à deux textes). Donc j'ai décidé de faire des noms de ma nouvelles listes, les clés auxquelles j'associe les prénoms des présidents, un jolie moyen de gruger le systême. J'ai pas mal duré pour créer ce dictionnaire mais finalement il est bien fonctionnel. Il affiche le nom des textes simplifié et le prénom des présidents associés. Les "print" que j'ai mis partout c'est pour à chaque fois suivre l'évolution de chaque élément au fur et à mesure du code. Si tu veux essayer ce code, tu dois créer ton nouveau projet, aller dans les fichiers de ton ordinateur, puis dans "pycharmproject" et dans ce nouveau projet tu mets les fichiers textes qui sont sur moodle. Ca te les fera directement apparaître sur ton nouveau projet pycharm. Et tu les mets dans un module intitulé "Textes".
 
-print(new_list_speech)
-
 presidents = {new_list_speech[0]:"Jacques", new_list_speech[1]:"Jacques", new_list_speech[2]:"Valéry", new_list_speech[3]:"François",new_list_speech[4]:"Emmanuel" , new_list_speech[5]:"François", new_list_speech[6]: "François", new_list_speech[7]:"Nicolas"}
 
-print(presidents)
 
 noms = []
 
@@ -56,23 +53,42 @@ def cleaned(file):
             speech.append(cleaned_content)
         return speech
 
-f = cleaned("Textes/Nomination_Chirac1.txt")
-print(f)
 
+for i in range(len(list_speech)):
+    with open(f"Speeches/min_list_speech_{i}.txt", "w", encoding="utf-8") as f1, open(f"Textes/{list_speech[i]}", "r", encoding="utf-8") as f2:
+        f1 = cleaned(f"Textes/{list_speech[i]}")
 
+def tf(text):
+    nb_occur = {}
+    mots = text.split()
 
+    for mot in mots:
+        if mot in mots:
+            nb_occur[mot] += 11
+        else:
+            nb_occur[mot] = 1
 
+    return nb_occur
 
+def idf(directory):
+    # Initialiser un dictionnaire vide pour stocker le score IDF de chaque mot
+    scores_idf = {}
 
+    #Ici je me suis basé sur la premiere fonction
+    documents_total = 0
+    for filename in os.listdir(directory):
+        if filename.endswith(".txt"):
+            documents_total += 1
 
+            with (open(os.path.join(directory, filename), "r", encoding="utf-8") as file):
+                mots_unique = set(file.read().split())
+                for mot in mots_unique:
+                    # get super utile dans les dico, je l'ai appris dans la video sur moodle des dictionaires
+                    # la focntion get() sert a chercher une valeur associé a une clef qui peut ne pas exister, ici par defaut la valeur 0 est renvoyé si l'items n'existe pas
+                    scores_idf[mot] = scores_idf.get(word, 0) + 1
 
+    # La fameuse formule...
+    for word, count in idf_scores.items():
+        idf_scores[word] = math.log(total_documents / count)
 
-
-
-
-
-
-
-
-
-
+    return idf_scores
