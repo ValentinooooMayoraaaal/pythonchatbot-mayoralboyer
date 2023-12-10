@@ -2,6 +2,8 @@
 #On doit mettre le nom du module et le format du document en variable de cette fonction
 
 import os
+import math
+from collections import defaultdict
 def list_of_files(directory, extension):
     files_names = []
     for filename in os.listdir(directory):
@@ -58,24 +60,25 @@ for i in range(len(list_speech)):
     with open(f"Speeches/min_list_speech_{i}.txt", "w", encoding="utf-8") as f1, open(f"Textes/{list_speech[i]}", "r", encoding="utf-8") as f2:
         f1 = cleaned(f"Textes/{list_speech[i]}")
 
-def calculate_tf_idf(file):
+def calcule_tf_idf(file):
 
     tf_idf_scores = defaultdict(float)
 
     idf_scores = defaultdict(float)
 
     total_documents = 0
-
+    for key in len(presidents.keys()):
+        total_documents += 1
             # Lire le contenu du fichier
-            with open(file, "r", encoding="utf-8") as file:
-                # Extraire les mots uniques du document
+            with open(file, "r", encoding="utf-8") as f1:
+                #ceci fait une liste des mots unique de la file en question
                 unique_words = set(file.read().split())
 
                 for word in unique_words:
                     idf_scores[word] += 1
 
-                # Mettre à jour le dictionnaire des scores TF-IDF
                 word_count = defaultdict(int)
+
                 for word in file.read().split():
                     word_count[word] += 1
 
@@ -83,4 +86,3 @@ def calculate_tf_idf(file):
                     tf_idf_scores[word] += (count / len(unique_words)) * math.log(total_documents / idf_scores[word])
 
     return dict(tf_idf_scores)
-
