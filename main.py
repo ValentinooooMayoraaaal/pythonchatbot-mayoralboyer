@@ -64,7 +64,7 @@ def tf(text):
 
     for mot in mots:
         if mot in mots:
-            nb_occur[mot] += 11
+            nb_occur[mot] += 1
         else:
             nb_occur[mot] = 1
 
