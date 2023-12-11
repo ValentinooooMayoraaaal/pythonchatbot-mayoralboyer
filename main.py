@@ -83,6 +83,6 @@ def calcule_tf_idf(file):
                     word_count[word] += 1
 
                 for word, count in word_count.items():
-                    tf_idf_scores[word] += (count / len(unique_words)) * math.log(total_documents / idf_scores[word] +1)
+                    tf_idf_scores[word] += ((count / len(unique_words)) * math.log(total_documents / idf_scores[word] +1)
 
     return dict(tf_idf_scores)
