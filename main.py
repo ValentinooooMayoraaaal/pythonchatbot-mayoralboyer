@@ -39,50 +39,57 @@ for speech in new_list_speech:
     if speech not in noms:
         noms.append(speech)
 
-def cleaned(file):
-    with open(file,"r",encoding="utf-8")as f:
-        speech = []
-        for lines in f:
-            cleaned_content = ""
-            for c in lines:
-                if 65 <= ord(c) <= 90:
-                    c = chr(ord(c) + 32)
-                if not (97 <= ord(c) <= 122 or c == "é" or c == "É" or c == "ç" or c == "à" or c == " " or c == "-" or c == "'"):
-                    c = ""
-                if c == "-" or c == "'":
-                    c = " "
-                cleaned_content += c
-            speech.append(cleaned_content)
-        return speech
+def cleaned(src_dir, cleaned_dir):
+    filenames = list_of_files(src_dir, "txt")
+    for file in filenames:
+        open_path = src_dir + "/" + file
+        cleaned_path = cleaned_dir + "/" + file.split(".")[0] + "-cleaned.txt"
+        with open(open_path,"r",encoding="utf-8") as f, open(cleaned_path, "w", encoding="utf-8") as f2:
+            content = f.readlines()
+            for line in content:
+                cleaned_content = ""
+                for c in line:
+                    if 65 <= ord(c) <= 90:
+                        c = chr(ord(c) + 32)
+                    if not (97 <= ord(c) <= 122 or c == "é" or c == "É" or c == "ç" or c == "à" or c == " " or c == "-" or c == "'"):
+                        c = ""
+                    if c == "-" or c == "'":
+                        c = " "
+                    cleaned_content += c
+                f2.write(cleaned_content)
 
+cleaned("Textes", "Speeches")
 
-for i in range(len(list_speech)):
-    with open(f"Speeches/min_list_speech_{i}.txt", "w", encoding="utf-8") as f1, open(f"Textes/{list_speech[i]}", "r", encoding="utf-8") as f2:
-        f1 = cleaned(f"Textes/{list_speech[i]}")
-
-def calcule_tf_idf(file):
-
+def calcule_tf_idf(file_path):
     tf_idf_scores = defaultdict(float)
-
     idf_scores = defaultdict(float)
-
     total_documents = 0
-    for key in len(presidents.keys()):
+
+    for key in presidents.keys():
         total_documents += 1
 
-        with open(file, "r", encoding="utf-8") as f:
-        #ceci fait une liste des mots unique du doc en question grace a la fonction set()
-            unique_words = set(file.read().split())
+        with open(file_path, "r", encoding="utf-8") as f:
+            # Ceci fait une liste des mots uniques du document en question grâce à la fonction set()
+            unique_words = set(f.read().split())
 
-            for word in unique_words:
-                idf_scores[word] += 1
+        for word in unique_words:
+            idf_scores[word] += 1
 
-            word_count = defaultdict(int)
-            file.seek(0) #on revient au début du fichier pour le lire a nouveau
-            for word in file.read().split():
+        word_count = defaultdict(int)
+
+        with open(file_path, "r", encoding="utf-8") as f:
+            # On revient au début du fichier pour le lire à nouveau
+            for word in f.read().split():
                 word_count[word] += 1
 
-            for word, count in word_count.items():
-                tf_idf_scores[word] += ((count / len(unique_words)) * math.log(total_documents / idf_scores[word] +1)
+        for word, count in word_count.items():
+            tf_idf_scores[word] += ((count / len(unique_words)) * (math.log(total_documents / (idf_scores[word])+1)))
 
-return dict(tf_idf_scores)
+    return dict(tf_idf_scores)
+
+tf_idf_results = calcule_tf_idf("Speeches/Nomination_Chirac1-cleaned.txt")
+
+with open("Speeches/Nomination_Chirac1-cleaned.txt", "w", encoding="utf-8") as f1:
+    f1.write(str(tf_idf_results))
+print(tf_idf_results)
+
