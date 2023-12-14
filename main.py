@@ -99,6 +99,24 @@ def matrice_vec(src_dir):
         return mat
     #On crée une matrice avec dans chaque ligne tous les vecteurs de chaque mots à l'intérieur
 #Maintenant on transforme les lignes et colonnes et les colonnes en ligne.
-matrice = matrice_vec("Speeches")
+
+def inversion_matrice(mat):
+    inv_mat = []
+
+    for j in range(len(mat[0])):
+        new_row = []
+
+
+        for i in range(len(mat)):
+
+            new_row.append(mat[i][j])
+
+
+        inv_mat.append(new_row)
+
+    return inv_mat
+
+
+matrice = inversion_matrice(matrice_vec("Speeches"))
 print(matrice)
 
