@@ -87,9 +87,18 @@ def calcule_tf_idf(file_path):
 
     return dict(tf_idf_scores)
 
-tf_idf_results = calcule_tf_idf("Speeches/Nomination_Chirac1-cleaned.txt")
-
-with open("Speeches/Nomination_Chirac1-cleaned.txt", "w", encoding="utf-8") as f1:
-    f1.write(str(tf_idf_results))
-print(tf_idf_results)
+def matrice_vec(src_dir):
+    mat = []
+    for i in range(len(list_speech)):
+        liste = []
+        for files in list_speech:
+            f1 = calcule_tf_idf(src_dir + "/" + files.split(".")[0]+"-cleaned.txt")
+            for j in range(len(f1)):
+                liste[j]= liste.append(f1.values())
+            mat.append(liste)
+        return mat
+    #On crée une matrice avec dans chaque ligne tous les vecteurs de chaque mots à l'intérieur
+#Maintenant on transforme les lignes et colonnes et les colonnes en ligne.
+matrice = matrice_vec("Speeches")
+print(matrice)
 
