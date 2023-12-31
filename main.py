@@ -83,7 +83,7 @@ def calcule_tf_idf(file_path):
                 word_count[word] += 1
 
         for word, count in word_count.items():
-            tf_idf_scores[word] += ((count / len(unique_words)) * (math.log(total_documents / (idf_scores[word])+1)))
+            tf_idf_scores[word] += ((count / len(unique_words)) * (math.log10(total_documents / (idf_scores[word])+1)))
 
     return dict(tf_idf_scores)
 
@@ -118,5 +118,16 @@ def inversion_matrice(mat):
 
 
 matrice = inversion_matrice(matrice_vec("Speeches"))
-print(matrice)
 
+#Fonction à développer à propos des mots inutiles
+def useless(src_dir): #Je prends comme paramètre le fichier contenant mes documents contenant mes mots
+    mots_inutiles = [] #j'initialise une liste vide de mots inutiles
+    for file in list_speech: #Pour chaque document dans mon fichier choisi comme paramètre, j'éxecute la suite
+        transi = {} #Je crée un dictionnaire de transition
+        file_path = src_dir + "/" + file.split(".")[0] + "-cleaned.txt" #Je recontruis le nom des documents que je cherche et j'ajoute la mention "-cleaned.txt" qu'ils auront forcément puisqu'ils ont été nettoyés avant
+        transi =calcule_tf_idf(file_path) #J'ajoute au dictionnaire de transition, le dictionnaires de valeurs TFIDF du document
+        for key in transi.keys(): #Pour chaque clé dans les clés du dictionnaire de mot
+            if transi[key] == 0: #Je regarde si la valeur associée à cette clé = 0
+                mots_inutiles.append(transi.keys()) #Si c'est le cas, je l'ajoute à ma liste mot inutile
+    return mots_inutiles
+print(useless("Speeches"))
