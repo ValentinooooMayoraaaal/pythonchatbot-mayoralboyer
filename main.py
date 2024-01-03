@@ -131,3 +131,19 @@ def useless(src_dir): #Je prends comme paramètre le fichier contenant mes docum
                 mots_inutiles.append(transi.keys()) #Si c'est le cas, je l'ajoute à ma liste mot inutile
     return mots_inutiles
 print(useless("Speeches"))
+
+# Afficher le(s) mot(s) ayant le score TD-IDF le plus élevé
+def higher_tf_idf(src_dir):
+    All_goat_of_each_file_in_a_folder = [] #J'initialise la liste qui contiendrait les mots de chaque fichier qui aura le tfidf le plus élevé
+    for file in list_speech: #Classique, je réutilise le nombre de fichier de ma variable list_speech
+        file_path = src_dir + "/" + file.split(".")[0] + "-cleaned.txt" #Je recrée leur nom qui se terminera forcément pas "-cleaned.txt" car on cherchera toujours à utiliser les fichiers nettoyer
+        dico_tf_idf_of_file_path = calcule_tf_idf(file_path) #Je mets le dico du fichier, actuellemennt dans la boucle, dans une nouvelle variable pour que ce soit plus clair
+        max = 0 #Je vais dire que 0 de ce dictionnaire est le maximum
+        for key in dico_tf_idf_of_file_path.keys(): #Puis je fais une boucle pour trouver le véritable maximum des tf-idf du dictionnaire en parcourant chaque clé du dico
+            if dico_tf_idf_of_file_path[key] > max: #Si la valeur associé à la clé est supérieur au maximum, la valeur devient le maximum et key_max conserve le mot associé à cette valeur maximum
+                max = dico_tf_idf_of_file_path[key]
+                key_max = key
+        All_goat_of_each_file_in_a_folder.append(key_max) #J'ajoute le mot à la liste des goats de chaque fichier du dossier
+    return All_goat_of_each_file_in_a_folder
+
+
