@@ -82,7 +82,7 @@ def calcule_tf_idf(file_path):
     for word, count in word_count.items():
         tf_idf_scores[word] += ((count / len(unique_words)) * (math.log10(total_documents / (idf_scores[word] + 1))))
     return dict(tf_idf_scores)
-#aucun tfidf est nul il faut peut etre mettre un seuil sous lequel on annule le score pour rendre négligeable le mot par la suite (?)
+#aucun tfidf est nul il faut peut etre mettre un seuil sous lequel on annule le score pour rendre négligeable le mot par la suite (?)...
 def matrice_vec(src_dir):
     mat = []
     for i in range(len(list_speech)):
