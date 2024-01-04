@@ -64,22 +64,23 @@ def calcule_tf_idf(file_path):
     tf_idf_scores = defaultdict(float)
     idf_scores = defaultdict(float)
     total_documents = len(presidents.keys())
-#ouvre le doc nettoyé et le lis
+
     with open(file_path, "r", encoding="utf-8") as f:
-        content = f.read().split()
-#liste des mots uniques
-        unique_words = set(content)
+        content = f.read()
+
+    unique_words = set(content.split())
 
     for word in unique_words:
         idf_scores[word] += 1
 
     word_count = defaultdict(int)
 
-    for word in content:
-        word_count[word] += 1
+    with open(file_path, "r", encoding="utf-8") as f:
+        for word in f.read().split():
+            word_count[word] += 1
 
     for word, count in word_count.items():
-        tf_idf_scores[word] += ((count / len(content)) * (math.log10(total_documents / (idf_scores[word] + 1))))
+        tf_idf_scores[word] += ((count / len(unique_words)) * (math.log10(total_documents / (idf_scores[word] + 1))))
     return dict(tf_idf_scores)
 
 def matrice_vec(src_dir):
