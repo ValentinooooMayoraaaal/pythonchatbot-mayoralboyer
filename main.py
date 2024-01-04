@@ -126,15 +126,17 @@ def useless(src_dir): #Je prends comme paramètre le fichier contenant mes docum
         transi = {} #Je crée un dictionnaire de transition
         file_path = src_dir + "/" + file.split(".")[0] + "-cleaned.txt" #Je recontruis le nom des documents que je cherche et j'ajoute la mention "-cleaned.txt" qu'ils auront forcément puisqu'ils ont été nettoyés avant
         transi =calcule_tf_idf(file_path) #J'ajoute au dictionnaire de transition, le dictionnaires de valeurs TFIDF du document
-        for key in transi.keys(): #Pour chaque clé dans les clés du dictionnaire de mot
-            if transi[key] == 0: #Je regarde si la valeur associée à cette clé = 0
-                mots_inutiles.append(transi.keys()) #Si c'est le cas, je l'ajoute à ma liste mot inutile
-    return mots_inutiles
+        for key in transi.keys(): #Pour chaque mot(clé) dans les mots(clés) du dictionnaire tf_idf
+            print(f"Mot: {key}, TF-IDF: {transi[key]}") #ceci est pour verifier si le probleme est la
+            if transi[key] == 0: #Je regarde si son score associée à cette clé = 0
+                mots_inutiles.append(key) #Si c'est le cas, je l'ajoute à ma liste mot inutile
+    print(mots_inutiles)
+    return mots_inutiles #Cette fomction renvoit une liste vide, "Speeches" est bien le bonne argument,
 print(useless("Speeches"))
 
 # Afficher le(s) mot(s) ayant le score TD-IDF le plus élevé
 def higher_tf_idf(src_dir):
-    All_goat_of_each_file_in_a_folder = [] #J'initialise la liste qui contiendrait les mots de chaque fichier qui aura le tfidf le plus élevé
+    All_goat_of_each_file_in_a_folder = [] #J'initialise la liste qui contiendra les mots de chaque fichier qui aura le tfidf le plus élevé
     for file in list_speech: #Classique, je réutilise le nombre de fichier de ma variable list_speech
         file_path = src_dir + "/" + file.split(".")[0] + "-cleaned.txt" #Je recrée leur nom qui se terminera forcément pas "-cleaned.txt" car on cherchera toujours à utiliser les fichiers nettoyer
         dico_tf_idf_of_file_path = calcule_tf_idf(file_path) #Je mets le dico du fichier, actuellemennt dans la boucle, dans une nouvelle variable pour que ce soit plus clair
