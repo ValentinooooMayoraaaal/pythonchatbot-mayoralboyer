@@ -51,7 +51,7 @@ def cleaned(src_dir, cleaned_dir):
                 for c in line:
                     if 65 <= ord(c) <= 90:
                         c = chr(ord(c) + 32)
-                    if not (97 <= ord(c) <= 122 or c == "é" or c == "É" or c == "ç" or c == "à" or c == " " or c == "-" or c == "'"):
+                    if not (97 <= ord(c) <= 122 or c == "é" or c == "è" or c == "É" or c == "È" or c == "ù" or c == "ç" or c == "à" or c == " " or c == "-" or c == "'"):
                         c = ""
                     if c == "-" or c == "'":
                         c = " "
@@ -64,26 +64,29 @@ def calcule_tf_idf(file_path):
     tf_idf_scores = defaultdict(float)
     idf_scores = defaultdict(float)
     total_documents = 0
-
+#compte le nombre de docs
     for key in presidents.keys():
         total_documents += 1
+#ouvre le doc nettoyé et le lis
+    with open(file_path, "r", encoding="utf-8") as f:
+        content = f.read()
+        print(f"Contenu du fichier : {content}")
+#liste des mots uniques
+        unique_words = set(content.split())
+        print(f"Mots uniques : {unique_words}")
 
-        with open(file_path, "r", encoding="utf-8") as f:
-            # Ceci fait une liste des mots uniques du document en question grâce à la fonction set()
-            unique_words = set(f.read().split())
+    for word in unique_words:
+        idf_scores[word] += 1
+        print(f"IDF Scores : {idf_scores}")
 
-        for word in unique_words:
-            idf_scores[word] += 1
+    word_count = defaultdict(int)
 
-        word_count = defaultdict(int)
+    with open(file_path, "r", encoding="utf-8") as f:
+        for word in f.read().split():
+            word_count[word] += 1
 
-        with open(file_path, "r", encoding="utf-8") as f:
-            # On revient au début du fichier pour le lire à nouveau
-            for word in f.read().split():
-                word_count[word] += 1
-
-        for word, count in word_count.items():
-            tf_idf_scores[word] += ((count / len(unique_words)) * (math.log10(total_documents / (idf_scores[word])+1)))
+    for word, count in word_count.items():
+        tf_idf_scores[word] += ((count / len(unique_words)) * (math.log10(total_documents / (idf_scores[word]) + 1)))
 
     return dict(tf_idf_scores)
 
@@ -127,10 +130,8 @@ def useless(src_dir): #Je prends comme paramètre le fichier contenant mes docum
         file_path = src_dir + "/" + file.split(".")[0] + "-cleaned.txt" #Je recontruis le nom des documents que je cherche et j'ajoute la mention "-cleaned.txt" qu'ils auront forcément puisqu'ils ont été nettoyés avant
         transi =calcule_tf_idf(file_path) #J'ajoute au dictionnaire de transition, le dictionnaires de valeurs TFIDF du document
         for key in transi.keys(): #Pour chaque mot(clé) dans les mots(clés) du dictionnaire tf_idf
-            print(f"Mot: {key}, TF-IDF: {transi[key]}") #ceci est pour verifier si le probleme est la
             if transi[key] == 0: #Je regarde si son score associée à cette clé = 0
                 mots_inutiles.append(key) #Si c'est le cas, je l'ajoute à ma liste mot inutile
-    print(mots_inutiles)
     return mots_inutiles #Cette fomction renvoit une liste vide, "Speeches" est bien le bonne argument,
 print(useless("Speeches"))
 
