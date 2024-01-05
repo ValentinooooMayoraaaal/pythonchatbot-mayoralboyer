@@ -61,28 +61,25 @@ def cleaned(src_dir, cleaned_dir):
 cleaned("Textes", "Speeches")
 def calcule_tf_idf(file_path):
     tf_idf_scores = defaultdict(float)
-    idf_scores = defaultdict(float)
-    total_documents = 0
+    numbr_of_docu_having_this_word = defaultdict(float)
+    total_documents = len(presidents.keys())
 
-    for key in presidents.keys():
-        total_documents += 1
+    with open(file_path, "r", encoding="utf-8") as f:
+        content = f.read()
 
-        with open(file_path, "r", encoding="utf-8") as f:
-            # Ceci fait une liste des mots uniques du document en question grâce à la fonction set()
-            unique_words = set(f.read().split())
+    unique_words = set(content.split())
 
-        for word in unique_words:
-            idf_scores[word] += 1
+    for word in unique_words:
+        numbr_of_docu_having_this_word[word] += 1
+    word_count = defaultdict(int)
 
-        word_count = defaultdict(int)
+    with open(file_path, "r", encoding="utf-8") as f:
+        for word in f.read().split():
+            word_count[word] += 1
 
-        with open(file_path, "r", encoding="utf-8") as f:
-            # On revient au début du fichier pour le lire à nouveau
-            for word in f.read().split():
-                word_count[word] += 1
-
-        for word, count in word_count.items():
-            tf_idf_scores[word] += ((count / len(unique_words)) * (math.log10(total_documents / (idf_scores[word])+1)))
+    for word, count in word_count.items():
+        tf_idf_scores[word] += ((count / len(unique_words)) * (math.log10(total_documents / (numbr_of_docu_having_this_word[word] + 1))))
+    return dict(tf_idf_scores))
 
     return dict(tf_idf_scores)
 
