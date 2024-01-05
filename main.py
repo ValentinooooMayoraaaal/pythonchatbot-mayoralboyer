@@ -62,7 +62,7 @@ cleaned("Textes", "Speeches")
 
 def calcule_tf_idf(file_path):
     tf_idf_scores = defaultdict(float)
-    idf_scores = defaultdict(float)
+    numbr_of_docu_having_this_word = defaultdict(float)
     total_documents = len(presidents.keys())
 
     with open(file_path, "r", encoding="utf-8") as f:
@@ -71,8 +71,7 @@ def calcule_tf_idf(file_path):
     unique_words = set(content.split())
 
     for word in unique_words:
-        idf_scores[word] += 1
-
+        numbr_of_docu_having_this_word[word] += 1
     word_count = defaultdict(int)
 
     with open(file_path, "r", encoding="utf-8") as f:
@@ -80,7 +79,7 @@ def calcule_tf_idf(file_path):
             word_count[word] += 1
 
     for word, count in word_count.items():
-        tf_idf_scores[word] += ((count / len(unique_words)) * (math.log10(total_documents / (idf_scores[word] + 1))))
+        tf_idf_scores[word] += ((count / len(unique_words)) * (math.log10(total_documents / (numbr_of_docu_having_this_word[word] + 1))))
     return dict(tf_idf_scores)
 #aucun tfidf est nul il faut peut etre mettre un seuil sous lequel on annule le score pour rendre négligeable le mot par la suite (?)...
 def matrice_vec(src_dir):
