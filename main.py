@@ -40,6 +40,21 @@ def Qui_parlait_écologie():
             print(president, "est le premier président à avoir aborder la thématique de l'écologie.")
             cpt_écolo = 1
 
+def mots_repetes_par_tous():
+    mots_repaire = []
+    for word in calcule_tf_idf("Speeches/Nomination_Chirac1-cleaned.txt").keys():
+        mots_repaire.append(word) #je mets tous les mots du premier doc dans une liste
+        for file in list_speech[1:]:  #Je vais utiliser tous les documents sauf le premier qui me sert de comparaison
+            for i in range(len(mots_repaire)-1): #Pour tous les mots dans la liste mots_repaire
+                if mots_repaire[i] not in calcule_tf_idf("Speeches/"+file.split(".")[0]+"-cleaned.txt").keys(): #S'il n'y a pas le mot de la liste repaire dans le mots du nouveau document
+                    mots_repaire.remove(mots_repaire[i]) #Alors on retire de la liste mots_repaire, le terme qui n'est pas dans les mots dees autres documents
+    mots_importants = []
+    for i in range(len(mots_repaire)-1):
+        if len(mots_repaire[i])>4:
+            mots_importants.append(mots_repaire[i])
+    return mots_importants
+
+
 
 
 
