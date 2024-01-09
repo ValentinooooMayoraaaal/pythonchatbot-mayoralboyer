@@ -60,26 +60,38 @@ def cleaned(src_dir, cleaned_dir):
 
 cleaned("Textes", "Speeches")
 
-def calcule_tf_idf(file_path):
+def counting_words(directory):
+    word_occurrences = defaultdict(int)
+
+    for filename in os.listdir(directory):
+        if filename.endswith("-cleaned.txt"):
+            file_path = os.path.join(directory, filename)
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read()
+                words = content.split()
+                for word in words:
+                    word_occurrences[word] += 1
+    print(word_occurrences)
+    return dict(word_occurrences)
+directory= "Speeches"
+
+def tf_idf(directory):
     tf_idf_scores = defaultdict(float)
-    numbr_of_docu_having_this_word = defaultdict(float)
     total_documents = len(presidents.keys())
 
-    with open(file_path, "r", encoding="utf-8") as f:
-        content = f.read()
+    word_occurrences = counting_words(directory)
 
-    unique_words = set(content.split())
+    for filename in os.listdir(directory):
+        if filename.endswith("-cleaned.txt"):
+            file_path = os.path.join(directory, filename)
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read()
+                words = content.split()
+                for word in set(words):  # Utilisation de set pour éviter de compter plusieurs fois le même mot dans le même document
+                    tf = words.count(word) / len(words)
+                    idf = math.log10(total_documents / (word_occurrences[word] + 1))
+                    tf_idf_scores[word] += tf * idf
 
-    for word in unique_words:
-        numbr_of_docu_having_this_word[word] += 1
-    word_count = defaultdict(int)
-
-    with open(file_path, "r", encoding="utf-8") as f:
-        for word in f.read().split():
-            word_count[word] += 1
-
-    for word, count in word_count.items():
-        tf_idf_scores[word] += ((count / len(unique_words)) * (math.log10(total_documents / (numbr_of_docu_having_this_word[word] + 1))))
     return dict(tf_idf_scores)
 #aucun tfidf est nul il faut peut etre mettre un seuil sous lequel on annule le score pour rendre négligeable le mot par la suite (?)...
 def matrice_vec(src_dir):
@@ -87,7 +99,7 @@ def matrice_vec(src_dir):
     for i in range(len(list_speech)):
         liste = []
         for files in list_speech:
-            f1 = calcule_tf_idf(src_dir + "/" + files.split(".")[0]+"-cleaned.txt")
+            f1 = tf_idf(src_dir + "/" + files.split(".")[0]+"-cleaned.txt")
             for j in range(len(f1)):
                 liste[j]= liste.append(f1.values())
             mat.append(liste)
@@ -97,18 +109,11 @@ def matrice_vec(src_dir):
 
 def inversion_matrice(mat):
     inv_mat = []
-
     for j in range(len(mat[0])):
         new_row = []
-
-
         for i in range(len(mat)):
-
             new_row.append(mat[i][j])
-
-
         inv_mat.append(new_row)
-
     return inv_mat
 
 
@@ -125,7 +130,6 @@ def useless(src_dir): #Je prends comme paramètre le fichier contenant mes docum
             if transi[key] == 0: #Je regarde si son score associée à cette clé = 0
                 mots_inutiles.append(key) #Si c'est le cas, je l'ajoute à ma liste mot inutile
     return mots_inutiles #Cette fomction renvoit une liste vide, "Speeches" est bien le bonne argument,
-print(useless("Speeches"))
 
 # Afficher le(s) mot(s) ayant le score TD-IDF le plus élevé
 def higher_tf_idf(src_dir):
