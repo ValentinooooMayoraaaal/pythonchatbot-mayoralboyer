@@ -73,7 +73,7 @@ def counting_words(directory):
                     word_occurrences[word] += 1
     print(word_occurrences)
     return dict(word_occurrences)
-directory= "Speeches"
+directory= "./Speeches"
 
 def tf_idf(directory):
     tf_idf_scores = defaultdict(float)
