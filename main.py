@@ -93,7 +93,7 @@ def tf_idf(directory):
                     tf_idf_scores[word] += tf * idf
 
     return dict(tf_idf_scores)
-def matrice_vec(src_dir):
+def matrice_vec(src_dir): #fonction qui fait une matrice avec les documents en ligne et les mots en colonnes
     mat = []
     for i in range(len(list_speech)):
         liste = []
@@ -104,7 +104,7 @@ def matrice_vec(src_dir):
             mat.append(liste)
         return mat
     #On crée une matrice avec dans chaque ligne tous les vecteurs de chaque mots à l'intérieur
-#Maintenant on transforme les lignes et colonnes et les colonnes en ligne.
+#Maintenant on transforme les lignes et colonnes et les colonnes en ligne car la matrice demandé est l'inverse .
 
 def inversion_matrice(mat):
     inv_mat = []
