@@ -153,3 +153,59 @@ def higher_tf_idf(src_dir):
         All_goat_of_each_file_in_a_folder.append(key_max) #J'ajoute le mot à la liste des goats de chaque fichier du dossier
     return All_goat_of_each_file_in_a_folder
 
+#Consigne : afficher le mot le plus répété chez Chirac
+def higher_Chirac():
+    list_most_repeated_words = higher_tf_idf("Speeches")
+    return(list_most_repeated_words[0],list_most_repeated_words[1])
+
+
+#Consigne : afficher qui a parlé de la nation et combien de fois
+def nation_repetition():
+    for file in list_speech:
+        with open("Speeches/"+file.split(".")[0]+"-cleaned.txt", 'r', encoding='utf-8') as f1:
+            content = f1.read()
+            words = content.split()
+            cpt = 0
+            for word in words:
+                if word == "nation":
+                    verif = True
+                    cpt += 1
+            if verif == True:
+                print("Il y a ",cpt," fois nation dans ", file)
+
+#Consigne : Indiquer le premier président à parler du climat et/ou de l’écologie
+def Qui_parlait_écologie():
+    list_écolo = []
+    list_climato = []
+    list_chronologique = ["Giscard dEstaing", "Mitterrand", "Chirac", "Sarkozy", "Hollande", "Macron"]
+    for file in list_speech:
+        dico = calcule_tf_idf("Speeches/" + file.split(".")[0] + "-cleaned.txt")
+        for key in dico.keys():
+            if key in ("climat", "climatique"):
+                list_climato.append(file[11:-4])
+            if key in ("écologie", "écologique"):
+                list_écolo.append(file[11:-4])
+    cpt_écolo = 0
+    cpt_climato = 0
+    for president in list_chronologique:
+        if (president in list_climato) and cpt_climato != 1:
+            print(president, "est le premier président à avoir aborder la thématique du climat.")
+            cpt_climato = 1
+        if (president in list_écolo) and cpt_écolo != 1:
+            print(president, "est le premier président à avoir aborder la thématique de l'écologie.")
+            cpt_écolo = 1
+
+def mots_repetes_par_tous():
+    mots_repaire = []
+    for word in calcule_tf_idf("Speeches/Nomination_Chirac1-cleaned.txt").keys():
+        mots_repaire.append(word) #je mets tous les mots du premier doc dans une liste
+        for file in list_speech[1:]:  #Je vais utiliser tous les documents sauf le premier qui me sert de comparaison
+            for i in range(len(mots_repaire)-1): #Pour tous les mots dans la liste mots_repaire
+                if mots_repaire[i] not in calcule_tf_idf("Speeches/"+file.split(".")[0]+"-cleaned.txt").keys(): #S'il n'y a pas le mot de la liste repaire dans le mots du nouveau document
+                    mots_repaire.remove(mots_repaire[i]) #Alors on retire de la liste mots_repaire, le terme qui n'est pas dans les mots dees autres documents
+    mots_importants = []
+    for i in range(len(mots_repaire)-1):
+        if len(mots_repaire[i])>4:
+            mots_importants.append(mots_repaire[i])
+    return mots_importants
+
