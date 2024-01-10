@@ -59,27 +59,38 @@ def cleaned(src_dir, cleaned_dir):
                     cleaned_content += c
                 f2.write(cleaned_content)
 cleaned("Textes", "Speeches")
-def calcule_tf_idf(file_path):
+directory= "./Speeches"
+def counting_words(directory):
+    word_occurrences = defaultdict(int)
+
+    for filename in os.listdir(directory):
+        if filename.endswith("-cleaned.txt"):
+            file_path = os.path.join(directory, filename)
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read()
+                words = content.split()
+                for word in words:
+                    word_occurrences[word] += 1
+    print(word_occurrences)
+    return dict(word_occurrences)
+
+
+def tf_idf(directory):
     tf_idf_scores = defaultdict(float)
-    numbr_of_docu_having_this_word = defaultdict(float)
     total_documents = len(presidents.keys())
 
-    with open(file_path, "r", encoding="utf-8") as f:
-        content = f.read()
+    word_occurrences = counting_words(directory)
 
-    unique_words = set(content.split())
-
-    for word in unique_words:
-        numbr_of_docu_having_this_word[word] += 1
-    word_count = defaultdict(int)
-
-    with open(file_path, "r", encoding="utf-8") as f:
-        for word in f.read().split():
-            word_count[word] += 1
-
-    for word, count in word_count.items():
-        tf_idf_scores[word] += ((count / len(unique_words)) * (math.log10(total_documents / (numbr_of_docu_having_this_word[word] + 1))))
-    return dict(tf_idf_scores)
+    for filename in os.listdir(directory):
+        if filename.endswith("-cleaned.txt"):
+            file_path = os.path.join(directory, filename)
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read()
+                words = content.split()
+                for word in set(words):
+                    tf = words.count(word) / len(words)
+                    idf = math.log10(total_documents / (word_occurrences[word] + 1))
+                    tf_idf_scores[word] += tf * idf
 
     return dict(tf_idf_scores)
 
