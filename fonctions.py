@@ -59,38 +59,27 @@ def cleaned(src_dir, cleaned_dir):
                     cleaned_content += c
                 f2.write(cleaned_content)
 cleaned("Textes", "Speeches")
-directory= "./Speeches"
-def counting_words(directory):
-    word_occurrences = defaultdict(int)
-
-    for filename in os.listdir(directory):
-        if filename.endswith("-cleaned.txt"):
-            file_path = os.path.join(directory, filename)
-            with open(file_path, "r", encoding="utf-8") as f:
-                content = f.read()
-                words = content.split()
-                for word in words:
-                    word_occurrences[word] += 1
-    print(word_occurrences)
-    return dict(word_occurrences)
-
-
-def tf_idf(directory):
+def calcule_tf_idf(file_path):
     tf_idf_scores = defaultdict(float)
+    numbr_of_docu_having_this_word = defaultdict(float)
     total_documents = len(presidents.keys())
 
-    word_occurrences = counting_words(directory)
+    with open(file_path, "r", encoding="utf-8") as f:
+        content = f.read()
 
-    for filename in os.listdir(directory):
-        if filename.endswith("-cleaned.txt"):
-            file_path = os.path.join(directory, filename)
-            with open(file_path, "r", encoding="utf-8") as f:
-                content = f.read()
-                words = content.split()
-                for word in set(words):
-                    tf = words.count(word) / len(words)
-                    idf = math.log10(total_documents / (word_occurrences[word] + 1))
-                    tf_idf_scores[word] += tf * idf
+    unique_words = set(content.split())
+
+    for word in unique_words:
+        numbr_of_docu_having_this_word[word] += 1
+    word_count = defaultdict(int)
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        for word in f.read().split():
+            word_count[word] += 1
+
+    for word, count in word_count.items():
+        tf_idf_scores[word] += ((count / len(unique_words)) * (math.log10(total_documents / (numbr_of_docu_having_this_word[word] + 1))))
+    return dict(tf_idf_scores)
 
     return dict(tf_idf_scores)
 
@@ -99,7 +88,7 @@ def matrice_vec(src_dir):
     for i in range(len(list_speech)):
         liste = []
         for files in list_speech:
-            f1 = tf_idf(src_dir + "/" + files.split(".")[0]+"-cleaned.txt")
+            f1 = calcule_tf_idf(src_dir + "/" + files.split(".")[0]+"-cleaned.txt")
             for j in range(len(f1)):
                 liste[j]= liste.append(f1.values())
             mat.append(liste)
@@ -129,7 +118,7 @@ def useless(src_dir): #Je prends comme paramètre le fichier contenant mes docum
     for file in list_speech: #Pour chaque document dans mon fichier choisi comme paramètre, j'éxecute la suite
         transi = {} #Je crée un dictionnaire de transition
         file_path = src_dir + "/" + file.split(".")[0] + "-cleaned.txt" #Je recontruis le nom des documents que je cherche et j'ajoute la mention "-cleaned.txt" qu'ils auront forcément puisqu'ils ont été nettoyés avant
-        transi = tf_idf(file_path) #J'ajoute au dictionnaire de transition, le dictionnaires de valeurs TFIDF du document
+        transi =calcule_tf_idf(file_path) #J'ajoute au dictionnaire de transition, le dictionnaires de valeurs TFIDF du document
         for key in transi.keys(): #Pour chaque clé dans les clés du dictionnaire de mot
             if transi[key] == 0: #Je regarde si la valeur associée à cette clé = 0
                 mots_inutiles.append(transi.keys()) #Si c'est le cas, je l'ajoute à ma liste mot inutile
@@ -139,7 +128,7 @@ def higher_tf_idf(src_dir):
     All_goat_of_each_file_in_a_folder = [] #J'initialise la liste qui contiendrait les mots de chaque fichier qui aura le tfidf le plus élevé
     for file in list_speech: #Classique, je réutilise le nombre de fichier de ma variable list_speech
         file_path = src_dir + "/" + file.split(".")[0] + "-cleaned.txt" #Je recrée leur nom qui se terminera forcément pas "-cleaned.txt" car on cherchera toujours à utiliser les fichiers nettoyer
-        dico_tf_idf_of_file_path = tf_idf(file_path) #Je mets le dico du fichier, actuellemennt dans la boucle, dans une nouvelle variable pour que ce soit plus clair
+        dico_tf_idf_of_file_path = calcule_tf_idf(file_path) #Je mets le dico du fichier, actuellemennt dans la boucle, dans une nouvelle variable pour que ce soit plus clair
         max = 0 #Je vais dire que 0 de ce dictionnaire est le maximum
         for key in dico_tf_idf_of_file_path.keys(): #Puis je fais une boucle pour trouver le véritable maximum des tf-idf du dictionnaire en parcourant chaque clé du dico
             if dico_tf_idf_of_file_path[key] > max: #Si la valeur associé à la clé est supérieur au maximum, la valeur devient le maximum et key_max conserve le mot associé à cette valeur maximum
@@ -147,3 +136,4 @@ def higher_tf_idf(src_dir):
                 key_max = key
         All_goat_of_each_file_in_a_folder.append(key_max) #J'ajoute le mot à la liste des goats de chaque fichier du dossier
     return All_goat_of_each_file_in_a_folder
+
